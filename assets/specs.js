@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.4
+	v.0.4.1 - md => dom optimization halfway complete
 
 */
 
@@ -47,7 +47,6 @@ $(function() {
 		if ($(raw_array[raw_array.length-2]).is('hr')) {
 			raw_obj = raw_array.pop();	// pops off last object from array (<ul>)
 			
-			var css = '';
 			$(raw_obj.children).each(function() {
 				// remove whitespace first:
 				// http://stackoverflow.com/questions/6163169/removing-whitespace-from-string-in-javascript
@@ -72,24 +71,14 @@ $(function() {
 					width: match[3],
 					height: match[4]
 				};
-				
-				// write out CSS class (start)
-				css += '.' + match[1] + ' { background-image: url(' + PROJECT.dirname + match[2] + '); width: ' + match[3] + 'px; height: ' + match[4] + 'px; ';
 
 				// set position, and write out css class accordlingly				
 				if (match[5]) {
 					setPosition(MOCKUPS[match[1]], match[5]);
-					css += 'left: ' + MOCKUPS[match[1]].left + 'px; top: ' + MOCKUPS[match[1]].top + 'px;';
-				}
-				
-				// finish css class
-				css += '}';
+				}				
 				
 			});
-			
-			// write out css to DOM
-			$('<style>' + css + '</style>').appendTo('head');
-			
+						
 			raw_array.pop(); // need to pop off/remove 'hr' element
 		}
 
@@ -97,11 +86,7 @@ $(function() {
 		raw_obj = raw_array.shift();
 		if ($(raw_obj).is('h1')) {
 			var title = $(raw_obj).text();
-			PROJECT.title = title;
-			
-			// set DOM
-			$('title').html(title);
-			$('#project-title').html(title);
+			PROJECT.title = title;			
 		}
 		else msg('Need to include # Title in the first line');
 		
@@ -111,15 +96,12 @@ $(function() {
 			if ($($(raw_obj).html()).is('em')) {
 				var version = $(raw_obj).text();
 				PROJECT.version = version;
-				$('#version').text(version);
 			}
 			else {
 				PROJECT.desc += $(raw_obj).html();
 			}
 			raw_obj = raw_array.shift();
 		}
-		
-		cat_dropdown = '';
 		
 		// set categories
 		// order of operation:
@@ -148,10 +130,7 @@ $(function() {
 				var hash = title.toLowerCase().replace(/\s+/g, '-');	// The Most Exciting Title => the-most-exciting-title
 				cat.title = title;
 				cat.hash = hash;
-				
-				// add to dropdown
-				cat_dropdown += '<li><a href="#' + hash + '">' + title + '</a></li>';
-				
+								
 			}
 			else msg('Need to include ## Category Title');
 			
@@ -179,7 +158,6 @@ $(function() {
 				if ($(raw_obj).is('h3')) {
 					// if mock isn't empty, we need to store it in the category
 					if (!_.isEmpty(mock)) {
-/* 						cat.mockups.push(mock); */
 						insertMockupstoCategory(cat, mock, baselayer_node, sidebar_node);
 					}
 					
@@ -284,22 +262,53 @@ $(function() {
 			
 			// if mock isn't empty, we need to store it in the category
 			if (!_.isEmpty(mock)) {
-/* 				cat.mockups.push(mock); */
 				insertMockupstoCategory(cat, mock, baselayer_node, sidebar_node);
 			}
 			
 			CATEGORIES.push(cat);
 		}
 		
-		// insert DOM pieces (odds and end)
-		// populate category dropdown
+		// === Insert into DOM via traversing global variables ---
+		
+		// Insert Mockup CSS into <head>
+		var css = '';
+
+		_.each(MOCKUPS, function(obj, key) {
+		
+			css += '.' + key + ' { background-image: url(' + PROJECT.dirname + obj.file + '); width: ' + obj.width + 'px; height: ' + obj.height + 'px; ';
+			
+			if (obj.top) {
+				// if top/left are defined...
+				// TODO: need a case if top/left are NOT defined (0,0)
+				css += 'top: ' + obj.top + 'px; left: ' + obj.left + 'px; ';
+			}
+			
+			css += '}';				
+			
+		});
+		
+		// write out css to DOM
+		$('<style>' + css + '</style>').appendTo('head');
+
+		// Set Title + Version
+		$('title').html(PROJECT.title);
+		$('#project-title').html(PROJECT.title);
+		$('#version').text(PROJECT.version);
+		
+		// Set Dropdown
+		var cat_dropdown = '';
+		
+		_.each(CATEGORIES, function(obj) { 
+			cat_dropdown += '<li><a href="#' + obj.hash + '">' + obj.title + '</a></li>';
+		});
+		
 		$('#cat-dropdown .dropdown-menu').html(cat_dropdown);
 		$('.dropdown-toggle').dropdown();	// activate dropdown js
 		
 		// give category dropdown some functionality
 		
 		$('.dropdown-menu a').click(function() {
-			var hash = $(this).attr('href');		// #string
+			var hash = $(this).attr('href');			// #string
 			hash = hash.substring(1);					// string
 			showCategory(hash);			
 		});
