@@ -1,0 +1,166 @@
+/*!
+ * Bootstrap v2.0.4
+ *
+ * Copyright 2012 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ */
+
+// CSS Reset
+@import "../less/reset.less";
+
+// Core variables and mixins
+@import "../less/variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "../less/mixins.less";
+
+// Grid system and page structure
+@import "../less/scaffolding.less";
+@import "../less/grid.less";
+@import "../less/layouts.less";
+
+// Base CSS
+@import "../less/type.less";
+@import "../less/code.less";
+@import "../less/forms.less";
+@import "../less/tables.less";
+
+// Components: common
+@import "../less/sprites.less";
+@import "../less/dropdowns.less";
+@import "../less/wells.less";
+@import "../less/component-animations.less";
+@import "../less/close.less";
+
+// Components: Buttons & Alerts
+@import "../less/buttons.less";
+@import "../less/button-groups.less";
+@import "../less/alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+
+// Components: Nav
+@import "../less/navs.less";
+@import "../less/navbar.less";
+@import "../less/breadcrumbs.less";
+@import "../less/pagination.less";
+@import "../less/pager.less";
+
+// Components: Popovers
+@import "../less/modals.less";
+@import "../less/tooltip.less";
+@import "../less/popovers.less";
+
+// Components: Misc
+@import "../less/thumbnails.less";
+@import "../less/labels-badges.less";
+@import "../less/progress-bars.less";
+@import "../less/accordion.less";
+@import "../less/carousel.less";
+@import "../less/hero-unit.less";
+
+// Utility classes
+@import "../less/utilities.less"; // Has to be last to override when necessary
+
+// Variables
+@margin: 20px;
+@sidebarwidth: 330px;
+
+body { 
+	background: #eee url(http://subtlepatterns.com/patterns/wood_pattern.png) center center repeat;
+	margin-top: 60px; 
+}
+
+.navbar-fixed-top .container, .navbar-fixed-bottom .container, .container { width: 1140px; }
+
+#project-title.brand { color: #fff; }
+
+#version {
+	float: left;
+	padding-top: 13px;
+}
+
+#category-dropdown { 
+	float: right; 
+	margin-top: 3px;
+}
+
+p { font-size: 16px; }
+
+#readfile { display: none; }
+
+.category { .hide; }
+
+/* Mockup Stuff */
+
+.mockup { margin-top: @margin; }
+
+.mockupinfo { 
+	width: @sidebarwidth;
+	float: left;
+}
+
+.baselayer {
+	margin-left: @sidebarwidth + @margin;
+}
+
+.baselayer, .baselayer div { 
+	/* For the base image as well as elements above it */
+	position: relative; 
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+// .shadow: not in use right now..
+.shadow { .box-shadow(0 10px 10px rgba(0,0,0,.25)); } /* For popovers, glimpses, modals, etc */
+
+/* Dots */
+.hover {
+	.opacity(100);
+	.box-shadow(0 2px 3px rgba(0,0,0,.33));
+	text-shadow: 0px 1px 0px rgba(0,0,0,.33);
+
+}
+
+.dot {
+	display: block;
+	.gradientBar(#38ADEE, #2E75CE);
+	border: 1px solid #2D5D9A;
+	text-align: center;
+	color: #fff;
+	line-height: 2;
+	.border-radius(25px);
+	height: 25px;
+	width: 25px;
+	margin: 0;
+	.transition(all 0.2s ease-in-out);
+	
+	&.mockup {
+		position: absolute;
+		z-index: 1000;
+		.opacity(70);
+	}
+	
+
+	&.gradientWarm { 
+		.gradientBar(#ffd500, #ffb700);
+		.hover;
+	}
+	
+	&.gradientHot { 
+		.gradientBar(#ee01eb, #c702c5);
+		.hover;
+	}
+
+	
+}
+
+.notation {
+	.clearfix;
+	margin-bottom: 5px;
+	
+	.dot { float: left; }
+	
+	p {
+		margin-left: @margin * 2;
+	}
+}
