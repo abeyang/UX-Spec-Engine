@@ -4222,6 +4222,14 @@ body {
 .navbar a.dropdown-toggle .caret {
   border-top-color: #fff;
 }
+.navbar .dropdown-menu li a {
+  padding: 8px 10px;
+}
+.navbar .dropdown-menu .badge {
+  float: right;
+  padding-top: 3px;
+  margin-left: 5px;
+}
 #category-dropdown {
   float: right;
   margin-top: 3px;

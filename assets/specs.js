@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.4.1 - md => dom optimization halfway complete
+	v.0.5
 
 */
 
@@ -141,11 +141,6 @@ $(function() {
 				raw_obj = raw_array.shift();
 			}
 			
-			// DOM manipulation -- NOT COMPLETE: NEED TO ADD DESCRIPTION
-			var template = _.template($('#template-category').html());
-			$('#main').append(template(cat));
-
-			
 			// noteindex: keeps count of all the notes across multiple mockups within the same category
 			noteindex = 1;
 
@@ -158,7 +153,7 @@ $(function() {
 				if ($(raw_obj).is('h3')) {
 					// if mock isn't empty, we need to store it in the category
 					if (!_.isEmpty(mock)) {
-						insertMockupstoCategory(cat, mock, baselayer_node, sidebar_node);
+						cat.mockups.push(mock);
 					}
 					
 					// initialize new mock
@@ -168,11 +163,6 @@ $(function() {
 						layers: [],
 						notes: []
 					};
-					// initialize new html string and baselayer/sidebar nodes
-					// (for layer and notes below)
-					html_str = '';
-					baselayer_node = '';
-					sidebar_node = '';
 				
 				}
 				
@@ -203,22 +193,14 @@ $(function() {
 							//		<div class="layer[2]">&nbsp;</div>
 							//		<div class="layer[1]">&nbsp;</div>
 							// </div>
-							var div = '<div class="' + layer_name + '"></div>';
-							if (!index) baselayer_node = $(div).addClass('baselayer');
-							else html_str = div + html_str;	// each successive layer builds "on top" of the other
+
 						});
-						
-						baselayer_node.append(html_str);
 						
 					}
 					
 					// else, assume it's "notes"
 					else {
-					
-						// create notation node (for mockup layer) and sidebar node
-						notes_node = $('<div class="notes" />');
-						sidebar_node = $('<div class="sidebar" />'); 
-					
+										
 						$(raw_obj).find('li').each(function() {
 							// split coordinates from sentence:
 							// http://www.rubular.com/r/lFBjcaB465
@@ -236,20 +218,9 @@ $(function() {
 							
 							setPosition(notation, pos);
 							
-							mock.notes.push(notation);
-							
-							// append to notation node (for baselayer_node later)
-							var template = _.template($('#template-dot').text());
-							notes_node.append(template(notation));
-							
-							// append to sidebar node
-							template = _.template($('#template-dot-sidebar').html());
-							sidebar_node.append(template(notation));
-							
+							mock.notes.push(notation);							
 						});
 						
-						// prepend notes_node to baselayer_node
-						baselayer_node.prepend(notes_node.children());
 					}
 					
 				}
@@ -262,7 +233,7 @@ $(function() {
 			
 			// if mock isn't empty, we need to store it in the category
 			if (!_.isEmpty(mock)) {
-				insertMockupstoCategory(cat, mock, baselayer_node, sidebar_node);
+				cat.mockups.push(mock);
 			}
 			
 			CATEGORIES.push(cat);
@@ -295,17 +266,75 @@ $(function() {
 		$('#project-title').html(PROJECT.title);
 		$('#version').text(PROJECT.version);
 		
-		// Set Dropdown
+		// Cycle through CATEGORIES
 		var cat_dropdown = '';
-		
-		_.each(CATEGORIES, function(obj) { 
-			cat_dropdown += '<li><a href="#' + obj.hash + '">' + obj.title + '</a></li>';
-		});
+		_.each(CATEGORIES, function(cat) { 
+
+			// Set Dropdown + number of mockups
+			cat_dropdown += '<li><a href="#' + cat.hash + '"><span class="title">' + cat.title + '</span><span class="badge badge-inverse">' + cat.mockups.length + '</span></a></li>';
+			
+			// Set Category info into main body
+			var template = _.template($('#template-category').html());
+			$('#main').append(template(cat));
+
+			// Cycle through this category's mockups
+			_.each(cat.mockups, function(mock) {
+			
+				// Set up mockup node -- everything will go inside of this node
+				var mock_node = $('<div class="mockup" />');
+				var template_mockinfo = _.template($('#template-mockup').html());
+				
+				// Insert title + description
+				mock_node.append(template_mockinfo(mock));
+				
+				// Cycle through this mockup's layers
+				var layers_str = '';
+				var baselayer_node;
+				_.each(mock.layers, function(layer, index) {
+					var div = '<div class="' + layer + '"></div>';
+					if (!index) baselayer_node = $(div).addClass('baselayer');
+					else layers_str = div + layers_str;	// each successive layer builds "on top" of the other
+				}); // end .each(mock.layers)
+				
+				// Cycle through this mockup's notes
+				// Need to accomplish 2 things: (1) fill in sidebar info, and (2) add dot notations to spec
+
+				var notes_node = $('<div class="notes" />');
+				var sidebar_node = $('<div class="sidebar" />'); 
+
+				_.each(mock.notes, function(note) {
+					
+					// append to notation node (for baselayer_node later)
+					var template = _.template($('#template-dot').text());
+					notes_node.append(template(note));
+					
+					// append to sidebar node
+					template = _.template($('#template-dot-sidebar').html());
+					sidebar_node.append(template(note));
+
+				}); // end .each(mock.notes)
+				
+				// add sidebar_node, then add notes, then add layers
+				if (sidebar_node) mock_node.find('.mockupinfo').append(sidebar_node.children());
+				baselayer_node.append(notes_node.children()).append(layers_str);
+				
+				// append baselayer to mock_node
+				mock_node.append(baselayer_node);
+				
+				// add mock_node to DOM
+				$('#' + cat.hash).append(mock_node);
+				
+			}); // end .each(cat.mockups)
+			
+		}); // end ._each(CATEGORIES)
 		
 		$('#cat-dropdown .dropdown-menu').html(cat_dropdown);
 		$('.dropdown-toggle').dropdown();	// activate dropdown js
 		
-		// give category dropdown some functionality
+		
+		/// === Add functionality to Spec elements ===
+		
+		// Grant functionality to category dropdown
 		
 		$('.dropdown-menu a').click(function() {
 			var hash = $(this).attr('href');			// #string
@@ -313,7 +342,6 @@ $(function() {
 			showCategory(hash);			
 		});
 
-		
 		// Show the correct category
 		var hash = '';
 		if (window.location.hash.length > 2) 
@@ -357,27 +385,6 @@ function removeBoundingTags(str, tag) {
     return match[1];
 }
 
-// assumes mockup is fully populated and ready to be inserted to category object
-// also inserts elements to the DOM, like layer_node (layers of mockups and notations)
-function insertMockupstoCategory(category, mockup, layer_node, sidebar_node) {
-	category.mockups.push(mockup);
-	
-	// DOM manipulation
-	var template = _.template($('#template-mockup').html());
-	var mock_node = $('<div class="mockup" />');
-
-	// Insert title + description, as well as sidebar notations
-	mock_node.append(template(mockup));
-	if (sidebar_node) mock_node.find('.mockupinfo').append(sidebar_node.children());
-	
-	// Insert layers + notations (layer_node)
-	mock_node.append(layer_node);
-	
-	// Insert to category div
-	$('#' + category.hash).append(mock_node);
-
-}
-
 // returns current category
 function getCategory() {
 	var current_cat = (PROJECT.current_cat) ? PROJECT.current_cat : $('#cat-dropdown').attr('data-content');
@@ -405,7 +412,7 @@ function showCategory(show_id) {
 	var name = $('.dropdown-menu a[href*="#' + show_id + '"]');		// returns array
 	if (name.length) {
 		name = name[0];
-		name = $(name).text();
+		name = $(name).find('.title').text();
 	}
 	$('#cat-name').text(name);
 	
