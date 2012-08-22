@@ -4207,12 +4207,20 @@ body {
 .container {
   width: 1140px;
 }
-#project-title.brand {
+.navbar #project-title.brand {
   color: #fff;
 }
-#version {
-  float: left;
+.navbar span {
   padding-top: 13px;
+}
+.navbar a.dropdown-toggle {
+  color: #fff;
+}
+.navbar a.dropdown-toggle:hover {
+  text-decoration: none;
+}
+.navbar a.dropdown-toggle .caret {
+  border-top-color: #fff;
 }
 #category-dropdown {
   float: right;
@@ -4223,6 +4231,13 @@ p {
 }
 #readfile {
   display: none;
+}
+#msg {
+  display: none;
+}
+#msg.alert-error {
+  border: 1px solid #c00;
+  color: #c00;
 }
 .category {
   display: none;

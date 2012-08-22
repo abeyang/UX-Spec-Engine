@@ -72,12 +72,25 @@ body {
 
 .navbar-fixed-top .container, .navbar-fixed-bottom .container, .container { width: 1140px; }
 
-#project-title.brand { color: #fff; }
-
-#version {
-	float: left;
-	padding-top: 13px;
+.navbar {
+	#project-title.brand { color: #fff; }
+	
+	span {
+		padding-top: 13px;
+	}
+	
+	a.dropdown-toggle {
+		color: #fff;
+		
+		&:hover { text-decoration: none; }
+		
+		.caret {
+			border-top-color: #fff;
+		}
+	}
+	
 }
+
 
 #category-dropdown { 
 	float: right; 
@@ -87,6 +100,15 @@ body {
 p { font-size: 16px; }
 
 #readfile { display: none; }
+
+#msg {
+	display: none;
+	
+	&.alert-error {
+		border: 1px solid #c00;
+		color: #c00;
+	}
+}
 
 .category { .hide; }
 

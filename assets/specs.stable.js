@@ -1,12 +1,6 @@
 /*
 	Spec Engine
-	v.0.3
-	
-	Most urgent to-do's:
-	√ Make index.html reside in the engine/ directory
-	+ Stop using alert's for errosr. Use bootstrap's built in error message
-	+ Switch <select> to use Twitter's dropdown
-	+ Delete cruft from old notation/popover (data-content, data-title, etc)
+	v.0.4
 
 */
 
@@ -16,7 +10,7 @@ $(function() {
 	var dirname = window.location.href.split('?');
 	// if there's an error, show it
 	if (dirname.length <= 1) {
-		alert('ERROR: Need to include directory name in the form of: index.html??DIRECTORYNAME');
+		msg('Need to include directory name in the form of: index.html?DIRECTORYNAME');
 		return;
 	}
 	dirname = dirname[1].split('#');
@@ -98,8 +92,6 @@ $(function() {
 			
 			raw_array.pop(); // need to pop off/remove 'hr' element
 		}
-		
-/* 			console.log(raw_array); */
 
 		// set project title		
 		raw_obj = raw_array.shift();
@@ -111,7 +103,7 @@ $(function() {
 			$('title').html(title);
 			$('#project-title').html(title);
 		}
-		else alert('Need to include # Title in the first line');
+		else msg('Need to include # Title in the first line');
 		
 		// set project version and description, if they exist
 		raw_obj = raw_array.shift()
@@ -158,10 +150,10 @@ $(function() {
 				cat.hash = hash;
 				
 				// add to dropdown
-				cat_dropdown += '<option value="' + hash + '">' + title + '</option>';
+				cat_dropdown += '<li><a href="#' + hash + '">' + title + '</a></li>';
 				
 			}
-			else alert('Need to include ## Category Title');
+			else msg('Need to include ## Category Title');
 			
 			raw_obj = raw_array.shift();
 			
@@ -284,7 +276,7 @@ $(function() {
 					
 				}
 				
-				else alert('Parser broken at this line: ' + $(raw_obj).text());
+				else msg('Parser broken at this line: ' + $(raw_obj).text());
 				
 				raw_obj = raw_array.shift();
 
@@ -301,12 +293,17 @@ $(function() {
 		
 		// insert DOM pieces (odds and end)
 		// populate category dropdown
-		$('#category-dropdown').html(cat_dropdown);
+		$('#cat-dropdown .dropdown-menu').html(cat_dropdown);
+		$('.dropdown-toggle').dropdown();	// activate dropdown js
 		
 		// give category dropdown some functionality
-		$('#category-dropdown').change(function() {
-			showCategory($(this).val());
+		
+		$('.dropdown-menu a').click(function() {
+			var hash = $(this).attr('href');		// #string
+			hash = hash.substring(1);					// string
+			showCategory(hash);			
 		});
+
 		
 		// Show the correct category
 		var hash = '';
@@ -328,9 +325,6 @@ $(function() {
 				$('#' + cat + ' .dot').removeClass('gradientHot');	
 			}
 		);
-		
-		// Activate popovers
-/* 		$('.dot').popover(); */
 		
 	});
 
@@ -377,7 +371,14 @@ function insertMockupstoCategory(category, mockup, layer_node, sidebar_node) {
 
 // returns current category
 function getCategory() {
-	var current_cat = (PROJECT.current_cat) ? PROJECT.current_cat : $('#category-dropdown').val();
+	var current_cat = (PROJECT.current_cat) ? PROJECT.current_cat : $('#cat-dropdown').attr('data-content');
+
+	// could still be empty (ie, coming to the page for the first time)
+	// pull first category from the list
+	if (!current_cat) {
+		current_cat = $('.dropdown-menu a').first().attr('href');
+		current_cat = current_cat.substring(1);
+	}
 	return current_cat;
 }
 
@@ -392,9 +393,16 @@ function showCategory(show_id) {
 	
 	// set category in dropdown 
 	// this is for good measure, as entry point may not have been through the dropdown (eg, through a direct url link)
-	$('#category-dropdown').val(show_id);
-	console.log($('#category-dropdown').val());
+	var name = $('.dropdown-menu a[href*="#' + show_id + '"]');		// returns array
+	if (name.length) {
+		name = name[0];
+		name = $(name).text();
+	}
+	$('#cat-name').text(name);
 	
-	// set category in window location hash
-	window.location.hash = show_id;
+}
+
+// assumes it's an error message (future use: might include other types of messages)
+function msg(content) {
+	$('#msg').addClass('alert-error').show().html(content);
 }

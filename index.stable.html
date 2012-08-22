@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-	<title>Specs v.0.3</title>
+	<title>Specs v.0.4</title>
 	
 	<!-- Le styles -->
-    <link href="assets/bootstrap.specs-engine.v0.3.css" rel="stylesheet">
+    <link href="assets/bootstrap.specs-engine.css" rel="stylesheet">
 
 </head>
 
@@ -15,16 +15,28 @@
 		<div class="navbar-inner">
 			<div class="container">
 
-				<span class="brand" id="project-title">Project Name</span>
-				<span id="version"></span>
-				
-			    <select id="category-dropdown"></select>
+				<span class="brand" id="project-title" data-content="">Project Name</span>
+				<span id="version" class="pull-left"></span>
+
+			    <span id="cat-dropdown" class="dropdown pull-right">
+			    	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				    	<span id="cat-name">Dropdown</span> <b class="caret"></b>
+				    </a>
+				    <ul class="dropdown-menu">
+				    
+				    </ul>
+			    </span> <!-- /.dropdown -->
 				
 			</div>
 		</div>
 	</div> <!-- /.navbar -->
 
 	<div class="container">
+	
+			<div id="msg" class="alert">
+				
+			</div> <!-- /#msg -->
+
 	
 			<div id="main">
 				
@@ -54,7 +66,7 @@
     
 	<!-- Dot -->
     <script type="text/template" id="template-dot"> 
-    	<span class="dot mockup mock-<%= index %>" data-id="<%= index %>" style="left: <%= left - 12 %>px; top: <%= top - 12 %>px;" data-original-title="<%= index %>" data-content="<%= content %>"><%= index %></span>
+    	<span class="dot mockup mock-<%= index %>" data-id="<%= index %>" style="left: <%= left - 12 %>px; top: <%= top - 12 %>px;"><%= index %></span>
     </script>
     
     <script type="text/template" id="template-dot-sidebar"> 
@@ -68,9 +80,9 @@
 	<script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
 	<script src="js/showdown.js" type="text/javascript"></script>
 	<script src="js/bootstrap-tooltip.js" type="text/javascript"></script>
-	<script src="js/bootstrap-popover.js" type="text/javascript"></script>
+	<script src="js/bootstrap-dropdown.js" type="text/javascript"></script>
     <script src="js/underscore.min.js" type="text/javascript"></script>
-    <script src="assets/specs.v0.3.js" type="text/javascript"></script>
+    <script src="assets/specs.stable.js" type="text/javascript"></script>
 	
 </body>
 </html>
