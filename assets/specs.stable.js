@@ -1,7 +1,6 @@
 /*
 	Spec Engine
-	v.0.5
-
+	v.0.6
 */
 
 $(function() {
@@ -25,6 +24,7 @@ $(function() {
 		dirname: dirname
 	};
 	CATEGORIES = [];
+	SCALE = 0.25;		// for bird's eye view
 	
 	// Init Showdown (Markdown parser)
 	var converter = new Showdown.converter();
@@ -243,31 +243,38 @@ $(function() {
 		
 		// Insert Mockup CSS into <head>
 		var css = '';
+		var overview_css = '';	// helper string
 
 		_.each(MOCKUPS, function(obj, key) {
 		
+			// css for regular mockups
 			css += '.' + key + ' { background-image: url(' + PROJECT.dirname + obj.file + '); width: ' + obj.width + 'px; height: ' + obj.height + 'px; ';
+
+			// css for #overview
+			overview_css = '#overview .' + key + ' { background-image: url(' + PROJECT.dirname + obj.file + '); width: ' + obj.width * SCALE + 'px; height: ' + obj.height * SCALE + 'px; ';
 			
+			// if top/left are defined...
 			if (obj.top) {
-				// if top/left are defined...
-				// TODO: need a case if top/left are NOT defined (0,0)
-				css += 'top: ' + obj.top + 'px; left: ' + obj.left + 'px; ';
+				css += 'top: ' + obj.top + 'px; left: ' + obj.left + 'px; ';							// regular
+				overview_css += 'top: ' + obj.top * SCALE + 'px; left: ' + obj.left * SCALE + 'px; ';	// #overview
 			}
 			
-			css += '}';				
+			css += '}' + overview_css + '}';
 			
 		});
 		
 		// write out css to DOM
 		$('<style>' + css + '</style>').appendTo('head');
 
-		// Set Title + Version
+		// Set Title, Description, and Version
 		$('title').html(PROJECT.title);
 		$('#project-title').html(PROJECT.title);
+		$('#project-description').html(PROJECT.desc);
 		$('#version').text(PROJECT.version);
 		
 		// Cycle through CATEGORIES
-		var cat_dropdown = '';
+		// Default dropdown: include #overview
+		var cat_dropdown = '<li><a href="#overview"><span class="title">Overview</span></a></li><li class="divider"></li>';
 		_.each(CATEGORIES, function(cat) { 
 
 			// Set Dropdown + number of mockups
@@ -276,6 +283,17 @@ $(function() {
 			// Set Category info into main body
 			var template = _.template($('#template-category').html());
 			$('#main').append(template(cat));
+			
+			// Create category div for #overview
+			var overview_cat = _.template($('#template-overview-category').html());
+			// title, # of mockups, # of notes (simply check the last note's index)
+			var overview_info = { 
+				title: cat.title,
+				hash: cat.hash,
+				mockups: cat.mockups.length,
+				notes: _.last(_.last(cat.mockups).notes).index
+			};
+			overview_cat = overview_cat(overview_info);
 
 			// Cycle through this category's mockups
 			_.each(cat.mockups, function(mock) {
@@ -314,7 +332,12 @@ $(function() {
 
 				}); // end .each(mock.notes)
 				
-				// add sidebar_node, then add notes, then add layers
+				// #overview: only care about baselayer + layers
+				var overview_baselayer_node = baselayer_node.clone();
+				overview_baselayer_node.append(layers_str);
+				overview_cat = $(overview_cat).append(overview_baselayer_node);
+				
+				// regular: add sidebar_node, then add notes, then add layers
 				if (sidebar_node) mock_node.find('.mockupinfo').append(sidebar_node.children());
 				baselayer_node.append(notes_node.children()).append(layers_str);
 				
@@ -326,6 +349,9 @@ $(function() {
 				
 			}); // end .each(cat.mockups)
 			
+			// add category to #overview dom
+			$('#overview').append(overview_cat);
+			
 		}); // end ._each(CATEGORIES)
 		
 		$('#cat-dropdown .dropdown-menu').html(cat_dropdown);
@@ -335,14 +361,20 @@ $(function() {
 		/// === Add functionality to Spec elements ===
 		
 		// Grant functionality to category dropdown
-		
 		$('.dropdown-menu a').click(function() {
 			var hash = $(this).attr('href');			// #string
 			hash = hash.substring(1);					// string
 			showCategory(hash);			
 		});
+		
+		// Grant functionality to #overview's category view
+		$('.overview-category').click(function() {
+			var hash = $(this).attr('data-content');
+			window.location.hash = hash;
+			showCategory(hash);
+		});
 
-		// Show the correct category
+		// On load: show the correct category
 		var hash = '';
 		if (window.location.hash.length > 2) 
 			hash = window.location.hash.substring(1);
@@ -387,13 +419,18 @@ function removeBoundingTags(str, tag) {
 
 // returns current category
 function getCategory() {
+	// TODO: is data-content retrieving anything?
 	var current_cat = (PROJECT.current_cat) ? PROJECT.current_cat : $('#cat-dropdown').attr('data-content');
 
 	// could still be empty (ie, coming to the page for the first time)
 	// pull first category from the list
+	// TODO: if empty, should just go to Overview
 	if (!current_cat) {
+		current_cat = 'overview';
+/*
 		current_cat = $('.dropdown-menu a').first().attr('href');
 		current_cat = current_cat.substring(1);
+*/
 	}
 	return current_cat;
 }
@@ -401,8 +438,19 @@ function getCategory() {
 // logic for showing the right category + hiding the others
 function showCategory(show_id) {
 	if (!show_id) show_id = getCategory();
-	$('.category').hide();
-	$('#' + show_id).show();
+	
+	// overview or not?
+	if (show_id == 'overview') {
+		$('#overview').show();
+		$('#main').hide();
+	}
+	else {
+		$('#overview').hide();
+		$('#main').show();
+		
+		$('.category').hide();
+		$('#' + show_id).show();		
+	}
 	
 	// set category in array
 	PROJECT.current_cat = show_id;

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-	<title>Specs v.0.5</title>
+	<title>Specs v.0.6</title>
 	
 	<!-- Le styles -->
     <link href="assets/bootstrap.specs-engine.css" rel="stylesheet">
@@ -36,6 +36,12 @@
 			<div id="msg" class="alert">
 				
 			</div> <!-- /#msg -->
+			
+			<div id="overview">
+				<h2>Overview</h2>
+				<div id="project-description"></div>
+			
+			</div> <!-- /#overview -->
 
 	
 			<div id="main">
@@ -47,6 +53,19 @@
 	<!-- TEMPLATING -->
 	
 	<div id="readfile"></div>
+	
+	<!-- Overview -->
+    <script type="text/template" id="template-overview-category"> 
+    	<div class="overview-category clearfix" data-content="<%= hash %>">
+    		<div class="header">
+	    		<strong><%= title %></strong>
+	    		<div class="pull-right">
+		    		<span>Mockups: <%= mockups %></span>
+		    		<span>Notes: <%= notes %></span>
+		    	</div>
+    		</div>
+    	</div>
+    </script>	
 	
 	<!-- Category -->
     <script type="text/template" id="template-category"> 

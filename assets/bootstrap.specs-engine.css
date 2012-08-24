@@ -4269,6 +4269,29 @@ p {
   background-repeat: no-repeat;
   background-position: left top;
 }
+#overview .overview-category {
+  background: #00AEDB;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+#overview .overview-category .header {
+  color: #eee;
+  /* 			.border-radius(5px 5px 0 0); */
+
+  padding: 10px 10px 0;
+}
+#overview .overview-category .baselayer,
+#overview .overview-category .baselayer div {
+  background-size: 100%;
+}
+#overview .overview-category .baselayer {
+  float: left;
+  border: 1px solid ddd;
+  margin: 10px;
+}
 .shadow {
   -webkit-box-shadow: 0 10px 10px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: 0 10px 10px rgba(0, 0, 0, 0.25);
