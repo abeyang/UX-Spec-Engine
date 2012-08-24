@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.6
+	v.0.7
 */
 
 $(function() {
@@ -386,12 +386,12 @@ $(function() {
 			function() { // on hover
 				var id = $(this).attr('data-id');
 				var cat = getCategory();
-				$('#' + cat + ' .mock-' + id).addClass('gradientHot');
-				$('#' + cat + ' .side-' + id).addClass('gradientHot');
+				$('#' + cat + ' .mock-' + id).addClass('blue').removeClass('red');
+				$('#' + cat + ' .side-' + id).addClass('blue').removeClass('red');
 			},
 			function () { // out hover
 				var cat = getCategory();
-				$('#' + cat + ' .dot').removeClass('gradientHot');	
+				$('#' + cat + ' .dot').removeClass('blue').addClass('red');	
 			}
 		);
 		
