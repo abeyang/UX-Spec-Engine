@@ -1,5 +1,5 @@
 /*!
- * Bootstrap v2.0.4
+ * Bootstrap v2.1.0
  *
  * Copyright 2012 Twitter, Inc
  * Licensed under the Apache License v2.0
@@ -85,40 +85,48 @@ p, div {
 .navbar-fixed-top .container, .navbar-fixed-bottom .container, .container { width: 1140px; }
 
 .navbar {
-	.opacity(90);
+	.opacity(95);
 
-	#project-title.brand { color: #111; }
-	#version {font-size: 13px; }
-	
-	span {
-		padding-top: 13px;
+	#project-title.brand { 
+		color: #111; 
+		padding-top: 0;
 	}
 	
-	a.dropdown-toggle {
-		color: @metro_red;
-		
-		&:hover { text-decoration: none; }
-		
-		.caret {
-			border-top-color: @metro_red;
-		}
+	#version { 
+		color: #999;
+		font-size: 13px; 
+		margin-top: 8px; 
 	}
 	
-	.dropdown-menu {
-		li a {
-			padding: 8px 10px;
+	#cat-dropdown {
+		margin-top: 4px;	
+	
+		a.dropdown-toggle {
+			color: @metro_red;
+
+			&:hover { text-decoration: none; }
+			
+			.caret {
+				border-top-color: @metro_red;
+			}
 		}
 		
-		.badge {
-			float: right;
-			padding-top: 3px;
-			margin-left: 5px;
-		}
-		
-		/* override default */
-		li > a:hover, .active > a, .active > a:hover {
-			background: @metro_red;
-		}
+		.dropdown-menu {
+			li a {
+				padding: 8px 10px;
+			}
+			
+			.badge {
+				float: right;
+				padding-top: 3px;
+				margin-left: 5px;
+			}
+			
+			/* override default */
+			li > a:hover, .active > a, .active > a:hover {
+				background: @metro_red;
+			}
+		}	
 	}
 	
 	.navbar-inner {
@@ -126,7 +134,7 @@ p, div {
 		
 		.container {
 			border-bottom: 1px solid #ccc;		
-			padding-top: 10px;
+			padding-top: 19px;
 			padding-bottom: 10px;
 		}
 	}
@@ -187,7 +195,7 @@ p, div {
 			color: #eee;
 			padding: 10px 10px 0;
 			
-			div { margin-top: 2px; }
+			h4 { margin: 0 0 5px; }
 		}
 		
 		.baselayer, .baselayer div { 

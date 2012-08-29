@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.7
+	v.0.7.1
 */
 
 $(function() {
