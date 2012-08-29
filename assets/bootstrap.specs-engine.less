@@ -112,19 +112,19 @@ p, div {
 		}
 		
 		.dropdown-menu {
-			li a {
+			li > a {
 				padding: 8px 10px;
+				
+				.title { padding-right: 80px; }
+				
+				.icon-white { display: none; }
 			}
-			
-			.badge {
-				float: right;
-				padding-top: 3px;
-				margin-left: 5px;
-			}
-			
+						
 			/* override default */
-			li > a:hover, .active > a, .active > a:hover {
+			li > a:hover {
 				background: @metro_red;
+				.icon-black { display: none; }
+				.icon-white { display: inline-block; }
 			}
 		}	
 	}
@@ -208,15 +208,6 @@ p, div {
 			margin: 10px;
 		}
 		
-		.mockup-info {
-			background: url(../img/mockups.png) center left no-repeat;
-			padding-left: 19px;
-		}
-		.note-info {
-			background: url(../img/notes.png) center left no-repeat;
-			padding-left: 18px;
-			margin-left: 10px;
-		}
 	}
 }
 
