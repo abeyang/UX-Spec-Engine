@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.8.1
+	v.0.8.2
 */
 
 $(function() {
@@ -184,7 +184,7 @@ $(function() {
 				
 				// mockup description: <p>
 				else if ($(raw_obj).is('p')) {
-					mock.desc += $(raw_obj).html();
+					mock.desc += '<p>' + $(raw_obj).html() + '</p>';
 				}
 				
 				// layers or notes: <h4>
@@ -453,8 +453,10 @@ function getCategory() {
 // logic for showing the right category + hiding the others
 function showCategory(show_id) {
 	// without this, parts of category (like title) will be covered by navbar
+/*
 	$('body').scrollTop(0);
 	console.log($('body').scrollTop());
+*/
 
 	if (!show_id) show_id = getCategory();
 	

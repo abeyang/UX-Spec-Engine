@@ -118,15 +118,13 @@ a { color: @metro_red; }
 				padding: 8px 10px;
 				
 				.title { padding-right: 80px; }
-				
-				.icon-white { display: none; }
+				.pull-right { .opacity(33); }
 			}
 						
 			/* override default */
 			li > a:hover {
 				background: @metro_red;
-				.icon-black { display: none; }
-				.icon-white { display: inline-block; }
+				i { background-image: url(../img/glyphicons-halflings-white.png); }
 			}
 		}	
 	}
@@ -170,6 +168,13 @@ a { color: @metro_red; }
 #readfile { .hide; } 
 
 /* Mockup Stuff */
+
+.baselayer, .baselayer div { 
+	/* For the base image as well as elements above it */
+	position: relative; 
+	background-repeat: no-repeat;
+	background-position: left top;
+}
 
 #overview {	
 	.overview-category {
@@ -220,12 +225,6 @@ a { color: @metro_red; }
 		margin-left: @sidebarwidth + @margin;
 	}
 	
-	.baselayer, .baselayer div { 
-		/* For the base image as well as elements above it */
-		position: relative; 
-		background-repeat: no-repeat;
-		background-position: left top;
-	}
 }
 
 // .shadow: not in use right now..
