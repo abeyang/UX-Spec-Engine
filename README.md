@@ -1,8 +1,20 @@
+**Incomplete README**. Things to write about:
+
++ Purpose
++ File structure
++ Dropbox integration
+
+---
+
+The SPEC.md format is shown below. (Should view this in its RAW format, not it's markdown-converted view, as shown in Github.)
+
+---
+
 # Project Name
 
 *Version Number*
 
-Some description about the project. As of v0.4, not being displayed.
+Some description about the project. 
 
 ## Category 1
 

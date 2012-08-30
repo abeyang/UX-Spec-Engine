@@ -167,27 +167,9 @@ a { color: @metro_red; }
 	}
 }
 
-#readfile, .category { .hide; }
+#readfile { .hide; } 
 
 /* Mockup Stuff */
-
-.mockup { margin-top: @margin; }
-
-.mockupinfo { 
-	width: @sidebarwidth;
-	float: left;
-}
-
-.baselayer {
-	margin-left: @sidebarwidth + @margin;
-}
-
-.baselayer, .baselayer div { 
-	/* For the base image as well as elements above it */
-	position: relative; 
-	background-repeat: no-repeat;
-	background-position: left top;
-}
 
 #overview {	
 	.overview-category {
@@ -221,8 +203,28 @@ a { color: @metro_red; }
 }
 
 #main {
+	.category { 
+		.hide; 
+		margin-bottom: @margin;
+	}
+
+	.mockup { margin-top: @margin; }
+
+	.mockupinfo { 
+		width: @sidebarwidth;
+		float: left;
+	}
+	
 	.baselayer {
 		border: 5px solid @grayLight;	
+		margin-left: @sidebarwidth + @margin;
+	}
+	
+	.baselayer, .baselayer div { 
+		/* For the base image as well as elements above it */
+		position: relative; 
+		background-repeat: no-repeat;
+		background-position: left top;
 	}
 }
 
