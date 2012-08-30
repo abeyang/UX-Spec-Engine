@@ -82,6 +82,8 @@ p, div {
 	line-height: 1.5;
 }
 
+a { color: @metro_red; }
+
 .navbar-fixed-top .container, .navbar-fixed-bottom .container, .container { width: 1140px; }
 
 .navbar {
@@ -147,10 +149,8 @@ p, div {
 	margin-top: 3px;
 }
 
-#readfile { display: none; }
-
 #msg {
-	display: none;
+	.hide;
 	
 	&.alert-error {
 		border: 1px solid #c00;
@@ -158,7 +158,16 @@ p, div {
 	}
 }
 
-.category { .hide; }
+#toc {
+	.hide;
+	
+	.nav > li > a:hover {
+		background-color: @metro_red;
+		color: @metro_beige;
+	}
+}
+
+#readfile, .category { .hide; }
 
 /* Mockup Stuff */
 

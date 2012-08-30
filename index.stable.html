@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-	<title>Specs v.0.7</title>
+	<title>Specs v.0.8</title>
 	
 	<!-- Le styles -->
     <link href="assets/bootstrap.specs-engine.css" rel="stylesheet">
@@ -37,6 +37,15 @@
 				
 			</div> <!-- /#msg -->
 			
+			<div id="toc">
+				<h2>Projects</h2>
+				
+				<ul class="nav nav-tabs nav-stacked">
+					
+				</ul>
+				
+			</div> <!-- /#toc -->
+			
 			<div id="overview">
 				<h2>Overview</h2>
 				<div id="project-description"></div>
@@ -58,14 +67,25 @@
     <script type="text/template" id="template-overview-category"> 
     	<div class="overview-category clearfix" data-content="<%= hash %>">
     		<div class="header clearfix">
-	    		<h3 class="pull-left"><%= title %></h3>
+	    		<h4 class="pull-left"><%= title %></h4>
 	    		<div class="pull-right">
-		    		<span class="mockup-info"><%= mockups %></span>
-		    		<span class="note-info"><%= notes %></span>
+		    		<span class="mockup-info"><i class="icon-picture icon-white"></i> <%= mockups %></span>
+		    		<span class="note-info"><i class="icon-comment icon-white"></i> <%= notes %></span>
 		    	</div>
     		</div>
     	</div>
     </script>	
+    
+	<!-- Dropdown (list item) -->
+    <script type="text/template" id="template-dropdown-item"> 
+	    <li><a href="#<%= hash %>" class="clearfix">
+			<span class="pull-right">
+	    		<span class="mockup-info"><i class="icon-picture icon-white"></i><i class="icon-picture icon-black"></i> <%= mockups %></span>
+	    		<span class="note-info"><i class="icon-comment icon-white"></i><i class="icon-comment icon-black"></i> <%= notes %></span>
+	    	</span>
+		    <span class="title"><%= title %></span>
+    	</a></li>
+    </script>
 	
 	<!-- Category -->
     <script type="text/template" id="template-category"> 

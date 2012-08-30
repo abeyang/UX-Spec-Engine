@@ -1,18 +1,30 @@
 /*
 	Spec Engine
-	v.0.7
+	v.0.8
 */
 
 $(function() {
 	// FIRST, need to find the right directory
 	// url needs to be in the format of: index.html?DIRECTORYNAME#category -- we're only interested in DIRECTORYNAME
+	
+	// split into an array: before '?' and after
 	var dirname = window.location.href.split('?');
 	// if there's an error, show it
 	if (dirname.length <= 1) {
-		msg('Need to include directory name in the form of: index.html?DIRECTORYNAME');
+		toc();
 		return;
 	}
+	
+	// split into an array: before '#' and after
 	dirname = dirname[1].split('#');
+	console.log(dirname);
+	
+	if (dirname[0].length < 2) {
+		toc();
+		return;
+	}
+	
+	// set to correct directory
 	dirname = '../' + dirname[0] + '/Specs/';
 	
 	// Init MOCKUPS
@@ -24,7 +36,7 @@ $(function() {
 		dirname: dirname
 	};
 	CATEGORIES = [];
-	SCALE = 0.25;		// for bird's eye view
+	SCALE = 0.34;		// for bird's eye view
 	
 	// Init Showdown (Markdown parser)
 	var converter = new Showdown.converter();
@@ -32,6 +44,11 @@ $(function() {
 
 	// Load SPEC.md
 	$('#readfile').load(PROJECT.dirname + "SPEC.md", function(response, status, xhr) {
+		if (status == 'error') {
+			msg('An error occurred whilst loading the file:' + xhr.status + " " + xhr.statusText);
+			return;
+		}
+		
 		// convert spec into HTML
  		response = converter.makeHtml(response); 
 		$('#readfile').html(response);
@@ -277,8 +294,19 @@ $(function() {
 		var cat_dropdown = '<li><a href="#overview"><span class="title">Overview</span></a></li><li class="divider"></li>';
 		_.each(CATEGORIES, function(cat) { 
 
+			// Initialize information about the current category:
+			// title, hash, # of mockups, # of notes (simply check the last note's index)
+			var overview_info = { 
+				title: cat.title,
+				hash: cat.hash,
+				mockups: cat.mockups.length,
+				notes: _.last(_.last(cat.mockups).notes).index
+			};
+
 			// Set Dropdown + number of mockups
-			cat_dropdown += '<li><a href="#' + cat.hash + '"><span class="title">' + cat.title + '</span><span class="badge badge-inverse">' + cat.mockups.length + '</span></a></li>';
+/* 			cat_dropdown += '<li><a href="#' + cat.hash + '"><span class="title">' + cat.title + '</span><span class="badge badge-inverse">' + overview_info.mockups + '|' + overview_info.notes + '</span></a></li>'; */
+			var dropdownitem = _.template($('#template-dropdown-item').html());
+			cat_dropdown += dropdownitem(overview_info);
 			
 			// Set Category info into main body
 			var template = _.template($('#template-category').html());
@@ -286,13 +314,6 @@ $(function() {
 			
 			// Create category div for #overview
 			var overview_cat = _.template($('#template-overview-category').html());
-			// title, # of mockups, # of notes (simply check the last note's index)
-			var overview_info = { 
-				title: cat.title,
-				hash: cat.hash,
-				mockups: cat.mockups.length,
-				notes: _.last(_.last(cat.mockups).notes).index
-			};
 			overview_cat = overview_cat(overview_info);
 
 			// Cycle through this category's mockups
@@ -362,8 +383,8 @@ $(function() {
 		
 		// Grant functionality to category dropdown
 		$('.dropdown-menu a').click(function() {
-			var hash = $(this).attr('href');			// #string
-			hash = hash.substring(1);					// string
+			var hash = $(this).attr('href');			// #somestring
+			hash = hash.substring(1);					// somestring
 			showCategory(hash);			
 		});
 		
@@ -419,7 +440,7 @@ function removeBoundingTags(str, tag) {
 
 // returns current category
 function getCategory() {
-	// TODO: is data-content retrieving anything?
+	// TODO: is data-content actually retrieving anything? Need to revisit...
 	var current_cat = (PROJECT.current_cat) ? PROJECT.current_cat : $('#cat-dropdown').attr('data-content');
 
 	// could still be empty (ie, coming to the page for the first time)
@@ -427,10 +448,6 @@ function getCategory() {
 	// TODO: if empty, should just go to Overview
 	if (!current_cat) {
 		current_cat = 'overview';
-/*
-		current_cat = $('.dropdown-menu a').first().attr('href');
-		current_cat = current_cat.substring(1);
-*/
 	}
 	return current_cat;
 }
@@ -468,5 +485,34 @@ function showCategory(show_id) {
 
 // assumes it's an error message (future use: might include other types of messages)
 function msg(content) {
-	$('#msg').addClass('alert-error').show().html(content);
+	$('#msg').addClass('alert-error').html(content);
+	$('title').text('Oops!');
+	showOnly('#msg');
+}
+
+function toc() {
+	// load TOC
+	$('#readfile').load('TOC.md', function(response, status, xhr) {
+		if (status == 'error') {
+			msg('Need to include directory name in the form of: index.html?DIRECTORYNAME (or include a TOC.md file)');
+			return;
+		}
+		
+		// Init Showdown (Markdown parser)
+		var converter = new Showdown.converter();
+		
+		// convert spec into HTML, and put directly into #toc
+ 		response = converter.makeHtml(response); 
+		$('#readfile').html(response);
+		
+		$('#toc ul').html($('#readfile ul').html());
+		
+		showOnly('#toc');
+	});
+}
+
+function showOnly(node) {
+	$(node).show();
+	$('#overview').hide();
+	$('.navbar').hide();
 }

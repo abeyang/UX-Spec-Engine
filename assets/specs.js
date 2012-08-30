@@ -1,18 +1,30 @@
 /*
 	Spec Engine
-	v.0.7.2
+	v.0.8
 */
 
 $(function() {
 	// FIRST, need to find the right directory
 	// url needs to be in the format of: index.html?DIRECTORYNAME#category -- we're only interested in DIRECTORYNAME
+	
+	// split into an array: before '?' and after
 	var dirname = window.location.href.split('?');
 	// if there's an error, show it
 	if (dirname.length <= 1) {
-		msg('Need to include directory name in the form of: index.html?DIRECTORYNAME');
+		toc();
 		return;
 	}
+	
+	// split into an array: before '#' and after
 	dirname = dirname[1].split('#');
+	console.log(dirname);
+	
+	if (dirname[0].length < 2) {
+		toc();
+		return;
+	}
+	
+	// set to correct directory
 	dirname = '../' + dirname[0] + '/Specs/';
 	
 	// Init MOCKUPS
@@ -32,6 +44,11 @@ $(function() {
 
 	// Load SPEC.md
 	$('#readfile').load(PROJECT.dirname + "SPEC.md", function(response, status, xhr) {
+		if (status == 'error') {
+			msg('An error occurred whilst loading the file:' + xhr.status + " " + xhr.statusText);
+			return;
+		}
+		
 		// convert spec into HTML
  		response = converter.makeHtml(response); 
 		$('#readfile').html(response);
@@ -468,5 +485,34 @@ function showCategory(show_id) {
 
 // assumes it's an error message (future use: might include other types of messages)
 function msg(content) {
-	$('#msg').addClass('alert-error').show().html(content);
+	$('#msg').addClass('alert-error').html(content);
+	$('title').text('Oops!');
+	showOnly('#msg');
+}
+
+function toc() {
+	// load TOC
+	$('#readfile').load('TOC.md', function(response, status, xhr) {
+		if (status == 'error') {
+			msg('Need to include directory name in the form of: index.html?DIRECTORYNAME (or include a TOC.md file)');
+			return;
+		}
+		
+		// Init Showdown (Markdown parser)
+		var converter = new Showdown.converter();
+		
+		// convert spec into HTML, and put directly into #toc
+ 		response = converter.makeHtml(response); 
+		$('#readfile').html(response);
+		
+		$('#toc ul').html($('#readfile ul').html());
+		
+		showOnly('#toc');
+	});
+}
+
+function showOnly(node) {
+	$(node).show();
+	$('#overview').hide();
+	$('.navbar').hide();
 }
