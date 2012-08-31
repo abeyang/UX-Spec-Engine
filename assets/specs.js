@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.8.3
+	v.0.9
 */
 
 $(function() {
@@ -380,6 +380,21 @@ $(function() {
 		
 		/// === Add functionality to Spec elements ===
 		
+		// Grant functionality to #hidenotes
+		$('#hidenotes').click(function(event) {
+			event.preventDefault();
+			
+			// if notes are already hidden
+			if ($(this).parent().hasClass('active')) {
+				$('.baselayer').removeClass('hidenotes');
+				$(this).parent().removeClass('active');
+			}
+			else {
+				$('.baselayer').addClass('hidenotes');
+				$(this).parent().addClass('active');
+			}
+		});
+		
 		// Grant functionality to category dropdown
 		$('.dropdown-menu a').click(function(event) {
 			event.preventDefault();
@@ -455,7 +470,6 @@ function showCategory(show_id) {
 
 	if (!show_id) show_id = getCategory();
 	window.location.hash = show_id;
-
 	
 	// overview or not?
 	if (show_id == 'overview') {
@@ -469,6 +483,8 @@ function showCategory(show_id) {
 		$('.category').hide();
 		$('#' + show_id).show();		
 	}
+	
+	$('body').scrollTop(0);
 	
 	// set category in array
 	PROJECT.current_cat = show_id;

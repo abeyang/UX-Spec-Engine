@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.8.2
+	v.0.9
 */
 
 $(function() {
@@ -380,8 +380,24 @@ $(function() {
 		
 		/// === Add functionality to Spec elements ===
 		
+		// Grant functionality to #hidenotes
+		$('#hidenotes').click(function(event) {
+			event.preventDefault();
+			
+			// if notes are already hidden
+			if ($(this).parent().hasClass('active')) {
+				$('.baselayer').removeClass('hidenotes');
+				$(this).parent().removeClass('active');
+			}
+			else {
+				$('.baselayer').addClass('hidenotes');
+				$(this).parent().addClass('active');
+			}
+		});
+		
 		// Grant functionality to category dropdown
-		$('.dropdown-menu a').click(function() {
+		$('.dropdown-menu a').click(function(event) {
+			event.preventDefault();
 			var hash = $(this).attr('href');			// #somestring
 			hash = hash.substring(1);					// somestring
 			showCategory(hash);			
@@ -390,7 +406,6 @@ $(function() {
 		// Grant functionality to #overview's category view
 		$('.overview-category').click(function() {
 			var hash = $(this).attr('data-content');
-			window.location.hash = hash;
 			showCategory(hash);
 		});
 
@@ -452,13 +467,9 @@ function getCategory() {
 
 // logic for showing the right category + hiding the others
 function showCategory(show_id) {
-	// without this, parts of category (like title) will be covered by navbar
-/*
-	$('body').scrollTop(0);
-	console.log($('body').scrollTop());
-*/
 
 	if (!show_id) show_id = getCategory();
+	window.location.hash = show_id;
 	
 	// overview or not?
 	if (show_id == 'overview') {
@@ -472,6 +483,8 @@ function showCategory(show_id) {
 		$('.category').hide();
 		$('#' + show_id).show();		
 	}
+	
+	$('body').scrollTop(0);
 	
 	// set category in array
 	PROJECT.current_cat = show_id;

@@ -4777,36 +4777,64 @@ a {
   font-size: 13px;
   margin-top: 8px;
 }
-.navbar #cat-dropdown {
-  margin-top: 4px;
+.navbar .nav-pills {
+  margin-top: -3px;
 }
-.navbar #cat-dropdown a.dropdown-toggle {
+.navbar .nav-pills > li > a {
+  border: 1px solid #f2f0e3;
+  color: #bf2e12;
+  font-size: 13px;
+}
+.navbar .nav-pills > li > a:hover {
+  border-color: #ccc;
   color: #bf2e12;
 }
-.navbar #cat-dropdown a.dropdown-toggle:hover {
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:hover,
+.navbar .nav > .active > a:focus,
+.navbar .nav.nav-pills li.dropdown.open > .dropdown-toggle {
+  background-color: #bf2e12;
+  border-color: #bf2e12;
+  color: #f2f0e3;
+  text-shadow: none;
+}
+.navbar .nav.nav-pills li.dropdown.open > .dropdown-toggle .caret {
+  border-top-color: #f2f0e3;
+  border-bottom-color: #f2f0e3;
+}
+.navbar .nav li.dropdown {
+  /* 		margin-top: 4px;	 */
+
+}
+.navbar .nav li.dropdown .dropdown-toggle {
+  /* 			color: @metro_red; */
+
+}
+.navbar .nav li.dropdown .dropdown-toggle:hover {
   text-decoration: none;
 }
-.navbar #cat-dropdown a.dropdown-toggle .caret {
+.navbar .nav li.dropdown .dropdown-toggle .caret {
   border-top-color: #bf2e12;
+  border-bottom-color: #bf2e12;
 }
-.navbar #cat-dropdown .dropdown-menu {
+.navbar .nav li.dropdown .dropdown-menu {
   /* override default */
 
 }
-.navbar #cat-dropdown .dropdown-menu li > a {
+.navbar .nav li.dropdown .dropdown-menu li > a {
   padding: 8px 10px;
 }
-.navbar #cat-dropdown .dropdown-menu li > a .title {
+.navbar .nav li.dropdown .dropdown-menu li > a .title {
   padding-right: 80px;
 }
-.navbar #cat-dropdown .dropdown-menu li > a .pull-right {
+.navbar .nav li.dropdown .dropdown-menu li > a .pull-right {
   opacity: 0.33;
   filter: alpha(opacity=33);
 }
-.navbar #cat-dropdown .dropdown-menu li > a:hover {
+.navbar .nav li.dropdown .dropdown-menu li > a:hover {
   background: #bf2e12;
 }
-.navbar #cat-dropdown .dropdown-menu li > a:hover i {
+.navbar .nav li.dropdown .dropdown-menu li > a:hover i {
   background-image: url(../img/glyphicons-halflings-white.png);
 }
 .navbar .navbar-inner {
@@ -4895,6 +4923,10 @@ a {
 #main .baselayer {
   border: 5px solid #999999;
   margin-left: 350px;
+}
+#main .baselayer.hidenotes .dot {
+  opacity: 0;
+  filter: alpha(opacity=0);
 }
 .shadow {
   -webkit-box-shadow: 0 10px 10px rgba(0, 0, 0, 0.25);
