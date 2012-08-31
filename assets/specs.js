@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.8.2
+	v.0.8.3
 */
 
 $(function() {
@@ -381,7 +381,8 @@ $(function() {
 		/// === Add functionality to Spec elements ===
 		
 		// Grant functionality to category dropdown
-		$('.dropdown-menu a').click(function() {
+		$('.dropdown-menu a').click(function(event) {
+			event.preventDefault();
 			var hash = $(this).attr('href');			// #somestring
 			hash = hash.substring(1);					// somestring
 			showCategory(hash);			
@@ -390,7 +391,6 @@ $(function() {
 		// Grant functionality to #overview's category view
 		$('.overview-category').click(function() {
 			var hash = $(this).attr('data-content');
-			window.location.hash = hash;
 			showCategory(hash);
 		});
 
@@ -452,13 +452,10 @@ function getCategory() {
 
 // logic for showing the right category + hiding the others
 function showCategory(show_id) {
-	// without this, parts of category (like title) will be covered by navbar
-/*
-	$('body').scrollTop(0);
-	console.log($('body').scrollTop());
-*/
 
 	if (!show_id) show_id = getCategory();
+	window.location.hash = show_id;
+
 	
 	// overview or not?
 	if (show_id == 'overview') {

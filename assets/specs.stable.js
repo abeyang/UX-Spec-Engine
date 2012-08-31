@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.8
+	v.0.8.2
 */
 
 $(function() {
@@ -17,7 +17,6 @@ $(function() {
 	
 	// split into an array: before '#' and after
 	dirname = dirname[1].split('#');
-	console.log(dirname);
 	
 	if (dirname[0].length < 2) {
 		toc();
@@ -185,7 +184,7 @@ $(function() {
 				
 				// mockup description: <p>
 				else if ($(raw_obj).is('p')) {
-					mock.desc += $(raw_obj).html();
+					mock.desc += '<p>' + $(raw_obj).html() + '</p>';
 				}
 				
 				// layers or notes: <h4>
@@ -440,8 +439,7 @@ function removeBoundingTags(str, tag) {
 
 // returns current category
 function getCategory() {
-	// TODO: is data-content actually retrieving anything? Need to revisit...
-	var current_cat = (PROJECT.current_cat) ? PROJECT.current_cat : $('#cat-dropdown').attr('data-content');
+	var current_cat = PROJECT.current_cat;
 
 	// could still be empty (ie, coming to the page for the first time)
 	// pull first category from the list
@@ -454,6 +452,12 @@ function getCategory() {
 
 // logic for showing the right category + hiding the others
 function showCategory(show_id) {
+	// without this, parts of category (like title) will be covered by navbar
+/*
+	$('body').scrollTop(0);
+	console.log($('body').scrollTop());
+*/
+
 	if (!show_id) show_id = getCategory();
 	
 	// overview or not?
@@ -481,6 +485,9 @@ function showCategory(show_id) {
 	}
 	$('#cat-name').text(name);
 	
+	// hackish way to close dropdown (wouldn't close on click otherwise)
+	$('#cat-dropdown').removeClass('open');	
+	
 }
 
 // assumes it's an error message (future use: might include other types of messages)
@@ -501,12 +508,13 @@ function toc() {
 		// Init Showdown (Markdown parser)
 		var converter = new Showdown.converter();
 		
-		// convert spec into HTML, and put directly into #toc
+		// convert spec into HTML, and put it into #toc's <ul>
  		response = converter.makeHtml(response); 
 		$('#readfile').html(response);
 		
 		$('#toc ul').html($('#readfile ul').html());
 		
+		$('title').text('Projects');
 		showOnly('#toc');
 	});
 }

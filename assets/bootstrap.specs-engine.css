@@ -4800,8 +4800,8 @@ a {
   padding-right: 80px;
 }
 .navbar #cat-dropdown .dropdown-menu li > a .pull-right {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
+  opacity: 0.33;
+  filter: alpha(opacity=33);
 }
 .navbar #cat-dropdown .dropdown-menu li > a:hover {
   background: #bf2e12;
