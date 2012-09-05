@@ -187,10 +187,24 @@ a { color: @metro_red; }
 #toc {
 	.hide;
 	
-	.nav > li > a:hover {
-		background-color: @metro_red;
-		color: @metro_beige;
+	.nav > li > a {
+		i {
+			.pull-right;
+			margin-top: 3px;
+			.opacity(25);
+		}
+		
+		&:hover {
+			background-color: @metro_red;
+			color: @metro_beige;
+			
+			i {
+				.icon-white;
+				.opacity(50);
+			}
+		}
 	}
+	
 }
 
 #readfile { .hide; } 
