@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.9
+	v.1.0
 */
 
 $(function() {
@@ -135,7 +135,8 @@ $(function() {
 				title: '',
 				hash: '',
 				desc: '',
-				mockups: []
+				mockups: [],
+				num_notes: 0
 			};
 			
 			var mock = {};
@@ -252,6 +253,7 @@ $(function() {
 				cat.mockups.push(mock);
 			}
 			
+			cat.num_notes = noteindex-1;
 			CATEGORIES.push(cat);
 		}
 		
@@ -294,16 +296,15 @@ $(function() {
 		_.each(CATEGORIES, function(cat) { 
 
 			// Initialize information about the current category:
-			// title, hash, # of mockups, # of notes (simply check the last note's index)
+			// title, hash, # of mockups, # of notes 
 			var overview_info = { 
 				title: cat.title,
 				hash: cat.hash,
 				mockups: cat.mockups.length,
-				notes: _.last(_.last(cat.mockups).notes).index
+				notes: cat.num_notes
 			};
 
 			// Set Dropdown + number of mockups
-/* 			cat_dropdown += '<li><a href="#' + cat.hash + '"><span class="title">' + cat.title + '</span><span class="badge badge-inverse">' + overview_info.mockups + '|' + overview_info.notes + '</span></a></li>'; */
 			var dropdownitem = _.template($('#template-dropdown-item').html());
 			cat_dropdown += dropdownitem(overview_info);
 			
@@ -430,6 +431,16 @@ $(function() {
 			}
 		);
 		
+		// Make it easy to find (x, y) within an image
+		if (console) {
+			$('.baselayer').click(function(e) {
+				// must account for border width
+				var x = e.pageX - this.offsetLeft - parseInt($(this).css('border-left-width'));
+				var y = e.pageY - this.offsetTop - parseInt($(this).css('border-top-width'));
+				console.log('(' + x + ', ' + y + ')');
+			});
+		}
+		
 	});
 
 });
@@ -526,6 +537,7 @@ function toc() {
 		$('#readfile').html(response);
 		
 		$('#toc ul').html($('#readfile ul').html());
+		$('#toc ul li a').prepend('<i class="icon-chevron-right"></i>');		// add the '>' icon
 		
 		$('title').text('Projects');
 		showOnly('#toc');

@@ -1,6 +1,6 @@
 /*
 	Spec Engine
-	v.0.9.1
+	v.1.0
 */
 
 $(function() {
@@ -431,6 +431,16 @@ $(function() {
 			}
 		);
 		
+		// Make it easy to find (x, y) within an image
+		if (console) {
+			$('.baselayer').click(function(e) {
+				// must account for border width
+				var x = e.pageX - this.offsetLeft - parseInt($(this).css('border-left-width'));
+				var y = e.pageY - this.offsetTop - parseInt($(this).css('border-top-width'));
+				console.log('(' + x + ', ' + y + ')');
+			});
+		}
+		
 	});
 
 });
@@ -527,7 +537,7 @@ function toc() {
 		$('#readfile').html(response);
 		
 		$('#toc ul').html($('#readfile ul').html());
-		$('#toc ul li a').prepend('<i class="icon-chevron-right"></i>');
+		$('#toc ul li a').prepend('<i class="icon-chevron-right"></i>');		// add the '>' icon
 		
 		$('title').text('Projects');
 		showOnly('#toc');
